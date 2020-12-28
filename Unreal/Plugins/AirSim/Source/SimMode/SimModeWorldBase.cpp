@@ -65,6 +65,17 @@ std::unique_ptr<ASimModeWorldBase::PhysicsEngineBase> ASimModeWorldBase::createP
 
         physics_engine->setWind(getSettings().wind);
     }
+    else if (physics_engine_name == "ExternalPhysicsEngine") {
+        msr::airlib::Settings fast_phys_settings;
+        if (msr::airlib::Settings::singleton().getChild("FastPhysicsEngine", fast_phys_settings)) {
+            physics_engine.reset(new msr::airlib::FastPhysicsEngine(fast_phys_settings.getBool("EnableGroundLock", true)));
+        }
+        else {
+            physics_engine.reset(new msr::airlib::FastPhysicsEngine());
+        }
+
+        physics_engine->setWind(getSettings().wind);
+    }
     else {
         physics_engine.reset();
         UAirBlueprintLib::LogMessageString("Unrecognized physics engine name: ",  physics_engine_name, LogDebugLevel::Failure);
