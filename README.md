@@ -15,6 +15,7 @@ and tap on play and then no
 
 ## Script
 Now run the script PythonClient\multirotor\move_through_set_vehicle_pose.py
+When hitting a block you can see the collision information in the command prompt.
 
 
 Have fun!
