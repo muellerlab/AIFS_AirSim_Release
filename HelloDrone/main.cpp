@@ -55,6 +55,11 @@ int main()
                 }
             }
         }
+        
+
+        // std::cout << "Press enter to test object interface API" << std::endl; std::cin.get();
+        // Pose pose1 = client.simGetObjectPose("TestCube");
+        // std::cout << pose1.position[0]<< std::endl;
 
         std::cout << "Press Enter to arm the drone" << std::endl; std::cin.get();
         client.enableApiControl(true);
@@ -107,20 +112,41 @@ int main()
         const float speed = 3.0f;
         const float size = 10.0f; 
         const float duration = size / speed;
-        DrivetrainType driveTrain = DrivetrainType::ForwardOnly;
-        YawMode yaw_mode(true, 0);
-        std::cout << "moveByVelocityZ(" << speed << ", 0, " << z << "," << duration << ")" << std::endl;
-        client.moveByVelocityZAsync(speed, 0, z, duration, driveTrain, yaw_mode);
-        std::this_thread::sleep_for(std::chrono::duration<double>(duration));
-        std::cout << "moveByVelocityZ(0, " << speed << "," << z << "," << duration << ")" << std::endl;
-        client.moveByVelocityZAsync(0, speed, z, duration, driveTrain, yaw_mode);
-        std::this_thread::sleep_for(std::chrono::duration<double>(duration));
-        std::cout << "moveByVelocityZ(" << -speed << ", 0, " << z << "," << duration << ")" << std::endl;
-        client.moveByVelocityZAsync(-speed, 0, z, duration, driveTrain, yaw_mode);
-        std::this_thread::sleep_for(std::chrono::duration<double>(duration));
-        std::cout << "moveByVelocityZ(0, " << -speed << "," << z << "," << duration << ")" << std::endl;
-        client.moveByVelocityZAsync(0, -speed, z, duration, driveTrain, yaw_mode);
-        std::this_thread::sleep_for(std::chrono::duration<double>(duration));
+
+        auto orientation = client.getMultirotorState().getOrientation();
+
+        float angle = 0;
+
+        while (true){
+            angle += M_PI/(360*100);
+
+
+            msr::airlib::Pose airsim_pose;
+            airsim_pose.position[0] = position.x() + 5*cosf(angle);
+            airsim_pose.position[1] = position.y() + 5*sinf(angle);
+            airsim_pose.position[2] = position.z();
+
+            airsim_pose.orientation.w() = orientation.w();
+            airsim_pose.orientation.x() = orientation.x();
+            airsim_pose.orientation.y() = orientation.y();
+            airsim_pose.orientation.z() = orientation.z();
+            client.simSetVehiclePose(airsim_pose, true);
+        }
+
+        // DrivetrainType driveTrain = DrivetrainType::ForwardOnly;
+        // YawMode yaw_mode(true, 0);
+        // std::cout << "moveByVelocityZ(" << speed << ", 0, " << z << "," << duration << ")" << std::endl;
+        // client.moveByVelocityZAsync(speed, 0, z, duration, driveTrain, yaw_mode);
+        // std::this_thread::sleep_for(std::chrono::duration<double>(duration));
+        // std::cout << "moveByVelocityZ(0, " << speed << "," << z << "," << duration << ")" << std::endl;
+        // client.moveByVelocityZAsync(0, speed, z, duration, driveTrain, yaw_mode);
+        // std::this_thread::sleep_for(std::chrono::duration<double>(duration));
+        // std::cout << "moveByVelocityZ(" << -speed << ", 0, " << z << "," << duration << ")" << std::endl;
+        // client.moveByVelocityZAsync(-speed, 0, z, duration, driveTrain, yaw_mode);
+        // std::this_thread::sleep_for(std::chrono::duration<double>(duration));
+        // std::cout << "moveByVelocityZ(0, " << -speed << "," << z << "," << duration << ")" << std::endl;
+        // client.moveByVelocityZAsync(0, -speed, z, duration, driveTrain, yaw_mode);
+        // std::this_thread::sleep_for(std::chrono::duration<double>(duration));
 
         client.hoverAsync()->waitOnLastTask();
 
