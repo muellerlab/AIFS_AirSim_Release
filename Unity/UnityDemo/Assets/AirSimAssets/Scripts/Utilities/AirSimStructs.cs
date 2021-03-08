@@ -457,14 +457,14 @@ namespace AirSimUnity {
 
     public enum ImageType {
         Scene = 0,
-        DepthPlanner,
-        DepthPerspective,
-        DepthVis,
-        DisparityNormalized,
-        Segmentation,
-        SurfaceNormals,
-        Infrared,
-        Count
+        DepthPlanner = 1,
+        DepthPerspective = 2,
+        DepthVis = 3,
+        DisparityNormalized = 4,
+        Segmentation = 5 ,
+        SurfaceNormals = 6,
+        Infrared = 7,
+        Count = 8
     };
 
     [StructLayout(LayoutKind.Sequential)]
