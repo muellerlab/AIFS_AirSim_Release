@@ -68,6 +68,11 @@ std::unique_ptr<SimModeWorldBase::PhysicsEngineBase> SimModeWorldBase::createPhy
             physics_engine.reset(new msr::airlib::FastPhysicsEngine());
         }
     }
+
+    else if (physics_engine_name == "ExternalPhysicsEngine") {
+        msr::airlib::Settings external_phys_settings;
+        physics_engine.reset(new msr::airlib::ExternalPhysicsEngine());
+    }
     else {
         physics_engine.reset();
         PrintLogMessage("Unrecognized physics engine name: ", physics_engine_name.c_str(), "", ErrorLogSeverity::Warnning);

@@ -2,6 +2,7 @@
 
 #include "SimModeBase.h"
 #include "physics/FastPhysicsEngine.hpp"
+#include "physics/ExternalPhysicsEngine.hpp"
 #include "physics/PhysicsWorld.hpp"
 
 class SimModeWorldBase : public SimModeBase
