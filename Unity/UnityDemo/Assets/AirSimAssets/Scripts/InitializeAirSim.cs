@@ -41,27 +41,15 @@ public class InitializeAirSim : MonoBehaviour
 
     public static string GetAirSimSettingsFileName()
     {
-
-        string fileName = Application.dataPath + "\\..\\settings.json";
-        if (File.Exists(fileName))
-        {
-            return fileName;
-        }
-
-        fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Path.Combine("AirSim", "settings.json"));
         string linuxFileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Path.Combine("Documents/AirSim", "settings.json"));
-        if (File.Exists(fileName))
-        {
-            return fileName;
-        }
-        else if (File.Exists(linuxFileName))
+        if (File.Exists(linuxFileName))
         {
             return linuxFileName;
         }
-        if (CreateSettingsFileWithDefaultValues(fileName))
-            return fileName;
-        else if (CreateSettingsFileWithDefaultValues(linuxFileName))
-            return linuxFileName;
+
+        if (CreateSettingsFileWithDefaultValues(linuxFileName)){
+            print("Generate Setting File");
+            return linuxFileName;}
         else
             return string.Empty;
     }

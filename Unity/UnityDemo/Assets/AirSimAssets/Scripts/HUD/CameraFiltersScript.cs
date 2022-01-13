@@ -135,6 +135,14 @@ namespace AirSimUnity {
                     ResetCameraEffects();
                     break;
 
+                case ImageType.DepthPlanner:
+                    SetDepthEffect();
+                    break;
+
+                case ImageType.DepthPerspective:
+                    SetDepthEffect();
+                    break;
+
                 case ImageType.DepthVis:
                     SetDepthEffect();
                     break;

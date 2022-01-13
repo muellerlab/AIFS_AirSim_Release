@@ -392,6 +392,9 @@ ros2/src/log
 
 # docs
 docs/README.md
+
+# meta
+*.meta
 build_docs/
 
 # api docs

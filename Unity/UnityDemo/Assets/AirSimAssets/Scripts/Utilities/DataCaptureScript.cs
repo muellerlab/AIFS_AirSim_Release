@@ -111,6 +111,7 @@ namespace AirSimUnity {
         }
 
         public ImageResponse GetImageBasedOnRequest(ImageRequest imageRequest) {
+            
             if (imageRequest.pixels_as_float) {
                 return new ImageResponse(null, GetFrameData(imageRequest.image_type), imageRequest.camera_name,
                     DataManager.ToAirSimVector(transform.position), DataManager.ToAirSimQuaternion(transform.rotation),
@@ -133,6 +134,11 @@ namespace AirSimUnity {
         private List<byte> GetFrameData(ImageType type, bool isCompress) {
             SetUpRenderType(type);
             SetUpRenderTextureForCapture(type);
+            if (type == ImageType.Scene){
+                    Debug.LogWarning("GetFrameData Scene");
+                } else if (type == ImageType.DepthPlanner){
+                    Debug.LogWarning("GetFrameData Depth");
+                }
 
             RenderTexture.active = renderTexture;
             screenShot.ReadPixels(captureRect, 0, 0);
@@ -205,16 +211,11 @@ namespace AirSimUnity {
             if (shaderScript.effect == type) {
                 return;
             }
-
             AirSimSettings.CameraCaptureSettings captureSettings = AirSimSettings.GetSettings().GetCaptureSettingsBasedOnImageType(type);
-
             renderTexture = RenderTexture.GetTemporary(captureSettings.Width, captureSettings.Height, 24, RenderTextureFormat.ARGB32);
-
             renderTexture.Create();
             renderCam.targetTexture = renderTexture;
-
             renderCam.enabled = true;
-
             screenShot = new Texture2D(captureSettings.Width, captureSettings.Height, TextureFormat.RGB24, false);
             captureRect = new Rect(0, 0, captureSettings.Width, captureSettings.Height);
         }

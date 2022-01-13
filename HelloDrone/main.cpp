@@ -13,6 +13,9 @@ STRICT_MODE_ON
 #include "common/common_utils/FileSystem.hpp"
 #include <iostream>
 #include <chrono>
+#include <thread>
+
+
 
 int main()
 {
@@ -27,16 +30,16 @@ int main()
     try {
         client.confirmConnection();
 
-        std::cout << "Press Enter to get FPV image" << std::endl;
-        std::cin.get();
-        vector<ImageRequest> request = { ImageRequest("0", ImageType::Scene), ImageRequest("1", ImageType::DepthPlanar, true) };
+        std::cout << "Press Enter to get FPV image" << std::endl; std::cin.get();
+        vector<ImageRequest> request = {ImageRequest("0", ImageType::DepthVis,false,true),ImageRequest("0", ImageType::DepthVis,false,true)};
         const vector<ImageResponse>& response = client.simGetImages(request);
         std::cout << "# of images received: " << response.size() << std::endl;
 
         if (response.size() > 0) {
             std::cout << "Enter path with ending separator to save images (leave empty for no save)" << std::endl;
             std::string path;
-            std::getline(std::cin, path);
+            path = "/home/clark/Documents/AirSim";
+            // std::getline(std::cin, path);
 
             for (const ImageResponse& image_info : response) {
                 std::cout << "Image uint8 size: " << image_info.image_data_uint8.size() << std::endl;
@@ -55,12 +58,11 @@ int main()
                 }
             }
         }
+        
 
-        std::cout << "Press Enter to arm the drone" << std::endl;
-        std::cin.get();
-
-        client.enableApiControl(true);
-        client.armDisarm(true);
+        // std::cout << "Press Enter to arm the drone" << std::endl; std::cin.get();
+        // client.enableApiControl(true);
+        // client.armDisarm(true);
 
         auto barometer_data = client.getBarometerData();
         std::cout << "Barometer data \n"
@@ -92,18 +94,21 @@ int main()
                   << "magnetometer_data.magnetic_field_body \t" << magnetometer_data.magnetic_field_body << std::endl;
         // << "magnetometer_data.magnetic_field_covariance" << magnetometer_data.magnetic_field_covariance // not implemented in sensor
 
-        std::cout << "Press Enter to takeoff" << std::endl;
-        std::cin.get();
-        float takeoff_timeout = 5;
-        client.takeoffAsync(takeoff_timeout)->waitOnLastTask();
+        std::cout << "Magnetometer data \n" 
+            << "magnetometer_data.time_stamp \t" << magnetometer_data.time_stamp << std::endl 
+            << "magnetometer_data.magnetic_field_body \t" << magnetometer_data.magnetic_field_body << std::endl; 
+            // << "magnetometer_data.magnetic_field_covariance" << magnetometer_data.magnetic_field_covariance // not implemented in sensor
+
+        // std::cout << "Press Enter to takeoff" << std::endl; std::cin.get();
+        // float takeoffTimeout = 5; 
+        // client.takeoffAsync(takeoffTimeout)->waitOnLastTask();
 
         // switch to explicit hover mode so that this is the fall back when
         // move* commands are finished.
-        std::this_thread::sleep_for(std::chrono::duration<double>(5));
-        client.hoverAsync()->waitOnLastTask();
+        // std::this_thread::sleep_for(std::chrono::duration<double>(5));
+        // client.hoverAsync()->waitOnLastTask();
 
-        std::cout << "Press Enter to fly in a 10m box pattern at 3 m/s velocity" << std::endl;
-        std::cin.get();
+        std::cout << "Press Enter to fly in a circular pattern" << std::endl; std::cin.get();
         // moveByVelocityZ is an offboard operation, so we need to set offboard mode.
         client.enableApiControl(true);
 
@@ -112,31 +117,74 @@ int main()
         const float speed = 3.0f;
         const float size = 10.0f;
         const float duration = size / speed;
-        DrivetrainType drivetrain = DrivetrainType::ForwardOnly;
-        YawMode yaw_mode(true, 0);
 
-        std::cout << "moveByVelocityZ(" << speed << ", 0, " << z << "," << duration << ")" << std::endl;
-        client.moveByVelocityZAsync(speed, 0, z, duration, drivetrain, yaw_mode);
-        std::this_thread::sleep_for(std::chrono::duration<double>(duration));
-        std::cout << "moveByVelocityZ(0, " << speed << "," << z << "," << duration << ")" << std::endl;
-        client.moveByVelocityZAsync(0, speed, z, duration, drivetrain, yaw_mode);
-        std::this_thread::sleep_for(std::chrono::duration<double>(duration));
-        std::cout << "moveByVelocityZ(" << -speed << ", 0, " << z << "," << duration << ")" << std::endl;
-        client.moveByVelocityZAsync(-speed, 0, z, duration, drivetrain, yaw_mode);
-        std::this_thread::sleep_for(std::chrono::duration<double>(duration));
-        std::cout << "moveByVelocityZ(0, " << -speed << "," << z << "," << duration << ")" << std::endl;
-        client.moveByVelocityZAsync(0, -speed, z, duration, drivetrain, yaw_mode);
-        std::this_thread::sleep_for(std::chrono::duration<double>(duration));
+        auto orientation = client.getMultirotorState().getOrientation();
 
-        client.hoverAsync()->waitOnLastTask();
+        float angle = 0;
 
-        std::cout << "Press Enter to land" << std::endl;
-        std::cin.get();
-        client.landAsync()->waitOnLastTask();
+        while (true){
+            angle += 2*M_PI/(30);
 
-        std::cout << "Press Enter to disarm" << std::endl;
-        std::cin.get();
-        client.armDisarm(false);
+
+            msr::airlib::Pose airsim_pose;
+            airsim_pose.position[0] = position.x() + 5*cosf(angle);
+            airsim_pose.position[1] = position.y() + 5*sinf(angle);
+            airsim_pose.position[2] = position.z();
+
+            airsim_pose.orientation.w() = orientation.w();
+            airsim_pose.orientation.x() = orientation.x();
+            airsim_pose.orientation.y() = orientation.y();
+            airsim_pose.orientation.z() = orientation.z();
+            client.simSetVehiclePose(airsim_pose, true);
+
+
+            vector<ImageRequest> request = {ImageRequest("0", ImageType::DepthVis,false,true)};
+            const vector<ImageResponse>& response = client.simGetImages(request);
+
+            if (response.size() > 0) {
+                std::string path;
+                path = "/home/clark/Documents/AirSim";
+                for (const ImageResponse& image_info : response) {
+                    std::cout << "Image uint8 size: " << image_info.image_data_uint8.size() << std::endl;
+                    std::cout << "Image float size: " << image_info.image_data_float.size() << std::endl;
+                    std::string file_path = FileSystem::combine(path, std::to_string(image_info.time_stamp));
+                    if (image_info.pixels_as_float) {
+                        Utils::writePfmFile(image_info.image_data_float.data(), image_info.width, image_info.height,
+                            file_path + ".pfm");
+                    }
+                    else {
+                        std::ofstream file(file_path + ".png", std::ios::binary);
+                        file.write(reinterpret_cast<const char*>(image_info.image_data_uint8.data()), image_info.image_data_uint8.size());
+                        file.close();
+                    }
+                }
+            }
+
+        }
+
+        // DrivetrainType driveTrain = DrivetrainType::ForwardOnly;
+        // YawMode yaw_mode(true, 0);
+        // std::cout << "moveByVelocityZ(" << speed << ", 0, " << z << "," << duration << ")" << std::endl;
+        // client.moveByVelocityZAsync(speed, 0, z, duration, driveTrain, yaw_mode);
+        // std::this_thread::sleep_for(std::chrono::duration<double>(duration));
+        // std::cout << "moveByVelocityZ(0, " << speed << "," << z << "," << duration << ")" << std::endl;
+        // client.moveByVelocityZAsync(0, speed, z, duration, driveTrain, yaw_mode);
+        // std::this_thread::sleep_for(std::chrono::duration<double>(duration));
+        // std::cout << "moveByVelocityZ(" << -speed << ", 0, " << z << "," << duration << ")" << std::endl;
+        // client.moveByVelocityZAsync(-speed, 0, z, duration, driveTrain, yaw_mode);
+        // std::this_thread::sleep_for(std::chrono::duration<double>(duration));
+        // std::cout << "moveByVelocityZ(0, " << -speed << "," << z << "," << duration << ")" << std::endl;
+        // client.moveByVelocityZAsync(0, -speed, z, duration, driveTrain, yaw_mode);
+        // std::this_thread::sleep_for(std::chrono::duration<double>(duration));
+
+        // client.hoverAsync()->waitOnLastTask();
+
+        // std::cout << "Press Enter to land" << std::endl; std::cin.get();
+        // client.landAsync()->waitOnLastTask();
+
+        // std::cout << "Press Enter to disarm" << std::endl; std::cin.get();
+        // client.armDisarm(false);
+
     }
     catch (rpc::rpc_error& e) {
         std::string msg = e.get_error().as<std::string>();
