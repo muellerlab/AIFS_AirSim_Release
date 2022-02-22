@@ -14,7 +14,7 @@ public class InitializeAirSim : MonoBehaviour
 			if(AirSimSettings.Initialize())
 			{
 
-                switch (AirSimSettings.GetSettings().SimMode)
+                /*switch (AirSimSettings.GetSettings().SimMode)
                 {
                     case "Car":
                     {
@@ -26,7 +26,7 @@ public class InitializeAirSim : MonoBehaviour
                         LoadSceneAsPerSimMode(AirSimSettings.GetSettings().SimMode);
                         break;
                     }
-				}
+				}*/
             }
         }
         else
@@ -79,7 +79,7 @@ public class InitializeAirSim : MonoBehaviour
         return result;
     }
 
-    public void LoadSceneAsPerSimMode(string load_name)
+    /*public void LoadSceneAsPerSimMode(string load_name)
     {
         if (load_name == "Car")
         {
@@ -87,6 +87,20 @@ public class InitializeAirSim : MonoBehaviour
             SceneManager.LoadSceneAsync("Scenes/CarDemo", LoadSceneMode.Single);
         }
         else if (load_name == "Multirotor")
+        {
+            AirSimSettings.GetSettings().SimMode = "Multirotor";
+            SceneManager.LoadSceneAsync("Scenes/DroneDemo", LoadSceneMode.Single);
+        }
+    } */
+
+    public void LoadSceneAsPerSimModeSelectScene(string load_name)
+    {
+        if (load_name == "Lab")
+        {
+            AirSimSettings.GetSettings().SimMode = "Multirotor";
+            SceneManager.LoadSceneAsync("Scenes/DroneDemoLabEnvironment", LoadSceneMode.Single);
+        }
+        else if (load_name == "Agri")
         {
             AirSimSettings.GetSettings().SimMode = "Multirotor";
             SceneManager.LoadSceneAsync("Scenes/DroneDemo", LoadSceneMode.Single);
