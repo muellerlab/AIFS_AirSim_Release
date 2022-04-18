@@ -14,7 +14,7 @@ public class SmoothFollow : MonoBehaviour {
     private Vector3 offsetPostion, finalPosition;
 
     private void Start() {
-        offsetPostion = new Vector3(0, 5, -10);
+        offsetPostion = new Vector3(0, 1, -2);
     }
 
     private void LateUpdate() {
