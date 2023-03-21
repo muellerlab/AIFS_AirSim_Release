@@ -313,7 +313,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1911289367484410, guid: f63bf11bc2a9a7146a4375d511e1425c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1927258875214174, guid: f63bf11bc2a9a7146a4375d511e1425c, type: 3}
       propertyPath: m_IsActive
@@ -416,6 +416,31 @@ PrefabInstance:
       propertyPath: m_FocalLength
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 20667858562259816, guid: f63bf11bc2a9a7146a4375d511e1425c,
+        type: 3}
+      propertyPath: m_projectionMatrixMode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 20667858562259816, guid: f63bf11bc2a9a7146a4375d511e1425c,
+        type: 3}
+      propertyPath: field of view
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 20667858562259816, guid: f63bf11bc2a9a7146a4375d511e1425c,
+        type: 3}
+      propertyPath: m_FocalLength
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 20667858562259816, guid: f63bf11bc2a9a7146a4375d511e1425c,
+        type: 3}
+      propertyPath: far clip plane
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 20667858562259816, guid: f63bf11bc2a9a7146a4375d511e1425c,
+        type: 3}
+      propertyPath: near clip plane
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 114101639218931136, guid: f63bf11bc2a9a7146a4375d511e1425c,
         type: 3}
       propertyPath: vehicleName
@@ -423,6 +448,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f63bf11bc2a9a7146a4375d511e1425c, type: 3}
+--- !u!1 &132490914 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1911289367484410, guid: f63bf11bc2a9a7146a4375d511e1425c,
+    type: 3}
+  m_PrefabInstance: {fileID: 132490913}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &132490915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132490914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffead28b01a4a58efb6fa5e00c6e92b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  period: 1
+  FileCounter: 0
 --- !u!1001 &160873294
 PrefabInstance:
   m_ObjectHideFlags: 0
