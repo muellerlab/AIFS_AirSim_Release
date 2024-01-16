@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using System.IO;
 
 public class AgriSceneGenerator : MonoBehaviour
 {
@@ -33,10 +35,11 @@ public class AgriSceneGenerator : MonoBehaviour
     public float meanSize = 1f;
     public float varianceSize = 0.2f;  // Standard deviation
 
-
+    private List<TreeInfo> treeInfoList = new List<TreeInfo>(); // List to store tree information
     private void Start()
     {
         PopulateMatrix();
+        SaveTreeInfoToCSV();
     }
 
     public void PopulateMatrix()
@@ -60,10 +63,42 @@ public class AgriSceneGenerator : MonoBehaviour
                 Vector3 originalScale = treeInstance.transform.localScale; // Get the prefab's original scale
                 treeInstance.transform.localScale = new Vector3(originalScale.x * randomSizeFactor, originalScale.y * randomSizeFactor, originalScale.z * randomSizeFactor);
 
+                // Collect tree information
+                TreeInfo treeInfo = new TreeInfo
+                {
+                    Position = position,
+                    Orientation = initialOrientation.eulerAngles,
+                    Scaling = treeInstance.transform.localScale
+                };
+
+                treeInfoList.Add(treeInfo);
+
             }
         }
     }
 
+
+    private void SaveTreeInfoToCSV()
+    {
+        // Define the CSV file path
+        string csvFilePath = "TreeInfo.csv";
+
+        // Create a CSV string
+        string csvContent = "TreeType,PositionX,PositionY,PositionZ,OrientationX,OrientationY,OrientationZ,ScalingX,ScalingY,ScalingZ\n";
+
+        foreach (TreeInfo treeInfo in treeInfoList)
+        {
+            // Append tree information to the CSV string
+            csvContent += $"{selectedTreeType},{treeInfo.Position.x},{treeInfo.Position.y},{treeInfo.Position.z}," +
+                          $"{treeInfo.Orientation.x},{treeInfo.Orientation.y},{treeInfo.Orientation.z}," +
+                          $"{treeInfo.Scaling.x},{treeInfo.Scaling.y},{treeInfo.Scaling.z}\n";
+        }
+
+        // Write the CSV string to the file
+        File.WriteAllText(csvFilePath, csvContent);
+        // Display a notice message
+        Debug.Log("Tree information has been saved to TreeInfo.csv in the UnityDemo folder.");
+    }
 
     private GameObject GetSelectedTreePrefab()
     {
@@ -89,4 +124,11 @@ public class AgriSceneGenerator : MonoBehaviour
         return mean + standardDeviation * randStdNormal; //random normal(mean,stdDev^2)
     }
 
+}
+
+public struct TreeInfo
+{
+    public Vector3 Position;
+    public Vector3 Orientation;
+    public Vector3 Scaling;
 }
