@@ -116,8 +116,9 @@ public:
         catch (rpc::timeout& t) {
             // will display a message like
             // rpc::timeout: Timeout of 50ms while calling RPC function 'sleep'
-
+            std::cout <<"This is wrong\n";
             std::cout << t.what() << std::endl;
+            
         }
 
         return 0;

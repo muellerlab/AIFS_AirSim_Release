@@ -615,7 +615,9 @@ void AirsimROSWrapper::gimbal_angle_quat_cmd_cb(const airsim_ros_pkgs::GimbalAng
         has_gimbal_cmd_ = true;
     }
     catch (tf2::TransformException& ex) {
+        std::cout << "wrong1\n";
         ROS_WARN("%s", ex.what());
+        
     }
 }
 
@@ -637,7 +639,9 @@ void AirsimROSWrapper::gimbal_angle_euler_cmd_cb(const airsim_ros_pkgs::GimbalAn
         has_gimbal_cmd_ = true;
     }
     catch (tf2::TransformException& ex) {
+        std::cout << "wrong2\n";
         ROS_WARN("%s", ex.what());
+        
     }
 }
 
@@ -768,7 +772,7 @@ sensor_msgs::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const msr::
     if (isENU_) {
         try {
             sensor_msgs::PointCloud2 lidar_msg_enu;
-            auto transformStampedENU = tf_buffer_.lookupTransform(AIRSIM_FRAME_ID, vehicle_name, ros::Time(0), ros::Duration(1));
+            auto transformStampedENU = tf_buffer_.lookupTransform(AIRSIM_FRAME_ID, vehicle_name, ros::Time(0), ros::Duration(10));
             tf2::doTransform(lidar_msg, lidar_msg_enu, transformStampedENU);
 
             lidar_msg_enu.header.stamp = lidar_msg.header.stamp;
@@ -777,8 +781,11 @@ sensor_msgs::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const msr::
             lidar_msg = std::move(lidar_msg_enu);
         }
         catch (tf2::TransformException& ex) {
+            std::cout << "wrong3\n";
             ROS_WARN("%s", ex.what());
-            ros::Duration(1.0).sleep();
+            
+            ros::Duration(10.0).sleep();
+            
         }
     }
 
