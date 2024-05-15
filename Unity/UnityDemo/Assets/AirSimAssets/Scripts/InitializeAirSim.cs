@@ -100,10 +100,15 @@ public class InitializeAirSim : MonoBehaviour
             AirSimSettings.GetSettings().SimMode = "Multirotor";
             SceneManager.LoadSceneAsync("Scenes/DroneDemoLabEnvironment", LoadSceneMode.Single);
         }
-        else if (load_name == "Agri")
+        else if (load_name == "Orchard")
         {
             AirSimSettings.GetSettings().SimMode = "Multirotor";
             SceneManager.LoadSceneAsync("Scenes/DroneDemo", LoadSceneMode.Single);
+        }
+        else if (load_name == "Greenhouse")
+        {
+            AirSimSettings.GetSettings().SimMode = "Multirotor";
+            SceneManager.LoadSceneAsync("Scenes/DroneDemoStrawberry", LoadSceneMode.Single);
         }
     }
 }

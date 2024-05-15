@@ -14,10 +14,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DroneDemo.unity
     guid: 012f6bdfaada17042bf7917f7d4fcbd8
-  - enabled: 1
-    path: Assets/Scenes/DroneDemoLab.unity
-    guid: d09f7dbdadcaf938a9503425b1f91036
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/DroneDemoLabEnvironment.unity
     guid: d7f732fdac1e8c6c6b436f0750725d0e
+  - enabled: 1
+    path: Assets/Scenes/DroneDemoStrawberry.unity
+    guid: 97e1cacafd3d2b691a6b8cc748c7b8c3
   m_configObjects: {}
