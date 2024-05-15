@@ -4,7 +4,7 @@ using UnityEngine;
 public class AutoImageScript_Right : MonoBehaviour
 {
 
-    private float nextPicTime = 0.0f;
+    private float nextPicTime = 10.0f;
     public float period = 1.0f;
     public int FileCounter = 0;
 
