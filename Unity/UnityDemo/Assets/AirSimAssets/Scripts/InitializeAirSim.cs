@@ -110,5 +110,15 @@ public class InitializeAirSim : MonoBehaviour
             AirSimSettings.GetSettings().SimMode = "Multirotor";
             SceneManager.LoadSceneAsync("Scenes/DroneDemoStrawberry", LoadSceneMode.Single);
         }
+        else if (load_name == "Pod")
+        {
+            AirSimSettings.GetSettings().SimMode = "Multirotor";
+            SceneManager.LoadSceneAsync("Scenes/DroneDemoBerkeleyPod", LoadSceneMode.Single);
+        }
+        else if (load_name == "Field")
+        {
+            AirSimSettings.GetSettings().SimMode = "Multirotor";
+            SceneManager.LoadSceneAsync("Scenes/DroneDemoField", LoadSceneMode.Single);
+        }
     }
 }
